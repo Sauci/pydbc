@@ -1,5 +1,15 @@
 class AstNode(object):
-    pass
+    def __eq__(self, other):
+        if not isinstance(other, AstNode):
+            raise NotImplementedError
+        self_props = set(p for p in dir(self) if not p.startswith('__'))
+        other_props = set(p for p in dir(other) if not p.startswith('__'))
+        if self_props == other_props:
+            for prop in self_props:
+                if getattr(self, prop) != getattr(other, prop):
+                    return False
+                return True
+        return False
 
 
 class AStNodeList(list):

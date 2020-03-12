@@ -75,3 +75,11 @@ def test_new_symbols_node(new_symbols_string_0, new_symbols_string_1):
     p = DbcParser('NS_ : {} {}'.format(new_symbols_string_0, new_symbols_string_1))
     assert isinstance(p.ast.new_symbols, list)
     assert p.ast.new_symbols == ([new_symbols_string_0] if new_symbols_string_0 else []) + [new_symbols_string_1]
+
+
+@pytest.mark.parametrize('bit_timing_string, bit_timing_value', (
+        ('', None),
+        ('11 : 12 , 13', BitTiming(11, 12, 13))))
+def test_bit_timing(bit_timing_string, bit_timing_value):
+    p = DbcParser('BS_ : {}'.format(bit_timing_string))
+    assert p.ast.bit_timing == bit_timing_value
