@@ -1,0 +1,5 @@
+.idea
+dist
+*.egg-info
+pydbc/parser.out
+pydbc/parsetab.py
