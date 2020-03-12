@@ -10,7 +10,7 @@ class DbcParser(object):
     tokens = lex_tokens
 
     def __init__(self, string):
-        self.ast = list()
+        self._ast = list()
         self._yacc = yacc.yacc(debug=True, module=self, optimize=True,
                                outputdir=os.path.dirname(os.path.realpath(__file__)))
         self._yacc.parse(string)
@@ -22,13 +22,17 @@ class DbcParser(object):
         else:
             raise FormatException('unvalid sequence in root node ', 0, string='')
 
+    @property
+    def ast(self):
+        return self._ast
+
     def p_dbc(self, p):
         """dbc : empty
                | dbc_optionals_list"""
+        kwargs = dict()
         if p[1] is not None:
-            self.ast = DbcFile(**dict(p[1]))
-        else:
-            self.ast = p[1]
+            kwargs = dict(p[1])
+        self._ast = DbcFile(**kwargs)
 
     @staticmethod
     def p_dbc_optionals_list(p):
