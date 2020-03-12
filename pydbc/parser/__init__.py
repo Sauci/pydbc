@@ -1,2 +1,2 @@
-from .scanner import DbcParser
 from .node import *
+from .scanner import DbcParser

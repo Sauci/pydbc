@@ -1,4 +1,5 @@
 import os
+
 import ply.lex as lex
 
 keywords = {r'VERSION',

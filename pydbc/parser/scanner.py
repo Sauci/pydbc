@@ -1,9 +1,10 @@
 import os
+
 import ply.yacc as yacc
 
-from .node import *
 from .exception import FormatException
 from .lexer import tokens as lex_tokens
+from .node import *
 
 
 class DbcParser(object):
