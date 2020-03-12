@@ -2,6 +2,7 @@ import pytest
 
 from .pydbc import *
 
+empty_string = ''
 random_strings = ['a', '0']
 new_symbols_strings = ['CM_',
                        'BA_DEF_',
@@ -68,8 +69,9 @@ def test_version_node(version_string):
     assert p.ast.version == version_string
 
 
-@pytest.mark.parametrize('new_symbols_string', new_symbols_strings)
-def test_new_symbols_node(new_symbols_string):
-    p = DbcParser('NS_ : {}'.format(new_symbols_string))
+@pytest.mark.parametrize('new_symbols_string_0', [empty_string] + new_symbols_strings)
+@pytest.mark.parametrize('new_symbols_string_1', new_symbols_strings)
+def test_new_symbols_node(new_symbols_string_0, new_symbols_string_1):
+    p = DbcParser('NS_ : {} {}'.format(new_symbols_string_0, new_symbols_string_1))
     assert isinstance(p.ast.new_symbols, list)
-    assert p.ast.new_symbols == [new_symbols_string]
+    assert p.ast.new_symbols == ([new_symbols_string_0] if new_symbols_string_0 else []) + [new_symbols_string_1]
