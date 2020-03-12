@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='sauci-pydbc',
-    version='0.0.1',
+    version='0.1.0',
     packages=[
         'pydbc',
         'pydbc.parser'
