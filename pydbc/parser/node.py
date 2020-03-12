@@ -188,6 +188,7 @@ class DbcFile(AstNode):
         self.signal_type_refs = signal_type_refs
         self.signal_groups = signal_groups
         self.signal_extended_value_type_list = signal_extended_value_type_list
+        self.multiplexed_signals = multiplexed_signals
 
 
 class Message(AstNode):
