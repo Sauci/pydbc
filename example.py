@@ -1,6 +1,3 @@
-# Package description
-The purpose of this package is to generate an AST based on the content of DBC-formatted string. Bellow a short example:
-```python
 from pydbc.parser import DbcParser
 
 dbc_data = """
@@ -28,10 +25,3 @@ if __name__ == '__main__':
     assert first_signal.offset == 0
     assert first_signal.minimum == 0
     assert first_signal.maximum == 4000
-
-``` 
-
-## Installation
-
-### Using pip
-run ```python -m pip install sauci-pydbc```

@@ -1,6 +1,3 @@
-import itertools
-
-
 class AstNode(object):
     pass
 

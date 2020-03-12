@@ -1,9 +1,9 @@
 import os
 import ply.yacc as yacc
 
-from dbc_parser.pydbc.exception import FormatException
+from .node import *
+from .exception import FormatException
 from .lexer import tokens as lex_tokens
-from dbc_parser.pydbc.node import *
 
 
 class DbcParser(object):
@@ -30,7 +30,8 @@ class DbcParser(object):
         else:
             self.ast = p[1]
 
-    def p_dbc_optionals_list(self, p):
+    @staticmethod
+    def p_dbc_optionals_list(p):
         """dbc_optionals_list : dbc_optionals
                               | dbc_optionals dbc_optionals_list"""
         try:
@@ -217,7 +218,8 @@ class DbcParser(object):
         """node_name : IDENT"""
         p[0] = p[1]
 
-    def p_message_id(self, p):
+    @staticmethod
+    def p_message_id(p):
         """message_id : NUMERIC"""
         p[0] = p[1]
 

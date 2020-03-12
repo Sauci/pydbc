@@ -1,1 +1,1 @@
-from .parser import DbcParser
+from .parser import *
