@@ -585,7 +585,7 @@ class DbcParser(object):
     @staticmethod
     def p_bit_timing_optional(p):
         """bit_timing_optional : empty
-                               | NUMERIC COLON NUMERIC COLON NUMERIC"""
+                               | NUMERIC COLON NUMERIC COMMA NUMERIC"""
         try:
             p[0] = BitTiming(p[1], p[3], p[5])
         except IndexError:
