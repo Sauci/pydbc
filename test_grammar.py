@@ -33,7 +33,7 @@ new_symbols_strings = ['CM_',
 
 @pytest.mark.parametrize('prop, value', (
         ('version', None),
-        ('new_symbols', None),
+        ('new_symbols', tuple()),
         ('bit_timing', None),
         ('nodes', None),
         ('value_tables', None),

@@ -144,7 +144,7 @@ class BitTiming(AstNode):
 class DbcFile(AstNode):
     def __init__(self,
                  version=None,
-                 new_symbols=None,
+                 new_symbols=tuple(),
                  bit_timing=None,
                  nodes=None,
                  value_tables=None,
