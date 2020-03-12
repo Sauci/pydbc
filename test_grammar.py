@@ -3,6 +3,32 @@ import pytest
 from .pydbc import *
 
 random_strings = ['a', '0']
+new_symbols_strings = ['CM_',
+                       'BA_DEF_',
+                       'BA_',
+                       'VAL_',
+                       'CAT_DEF_',
+                       'CAT_',
+                       'FILTER',
+                       'BA_DEF_DEF_',
+                       'EV_DATA_',
+                       'ENVVAR_DATA_',
+                       'SGTYPE_',
+                       'SGTYPE_VAL_',
+                       'BA_DEF_SGTYPE_',
+                       'BA_SGTYPE_',
+                       'SIG_TYPE_REF_',
+                       'VAL_TABLE_',
+                       'SIG_GROUP_',
+                       'SIG_VALTYPE_',
+                       'SIGTYPE_VALTYPE_',
+                       'BO_TX_BU_',
+                       'BA_DEF_REL_',
+                       'BA_REL_',
+                       'BA_DEF_DEF_REL_',
+                       'BU_SG_REL_',
+                       'BU_EV_REL_',
+                       'BU_BO_REL_']
 
 
 @pytest.mark.parametrize('prop, value', (
@@ -40,3 +66,10 @@ def test_version_node(version_string):
     p = DbcParser('VERSION "{}"'.format(version_string))
     assert isinstance(p.ast.version, Version)
     assert p.ast.version == version_string
+
+
+@pytest.mark.parametrize('new_symbols_string', new_symbols_strings)
+def test_new_symbols_node(new_symbols_string):
+    p = DbcParser('NS_ : {}'.format(new_symbols_string))
+    assert isinstance(p.ast.new_symbols, list)
+    assert p.ast.new_symbols == [new_symbols_string]
