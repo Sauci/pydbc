@@ -4,6 +4,7 @@ from .pydbc import *
 
 empty_string = ''
 random_strings = ['a', '0']
+c_identifiers = ['_', '_c']
 new_symbols_strings = ['CM_',
                        'BA_DEF_',
                        'BA_',
@@ -80,6 +81,14 @@ def test_new_symbols_node(new_symbols_string_0, new_symbols_string_1):
 @pytest.mark.parametrize('bit_timing_string, bit_timing_value', (
         ('', None),
         ('11 : 12 , 13', BitTiming(11, 12, 13))))
-def test_bit_timing(bit_timing_string, bit_timing_value):
+def test_bit_timing_node(bit_timing_string, bit_timing_value):
     p = DbcParser('BS_ : {}'.format(bit_timing_string))
     assert p.ast.bit_timing == bit_timing_value
+
+
+@pytest.mark.parametrize('node_name_string_0', [empty_string] + c_identifiers)
+@pytest.mark.parametrize('node_name_string_1', c_identifiers)
+def test_nodes_node(node_name_string_0, node_name_string_1):
+    p = DbcParser('BU_ : {} {}'.format(node_name_string_0, node_name_string_1))
+    assert isinstance(p.ast.nodes, list)
+    assert p.ast.nodes == ([node_name_string_0] if node_name_string_0 else []) + [node_name_string_1]
