@@ -156,7 +156,7 @@ class DbcFile(AstNode):
                  version=None,
                  new_symbols=tuple(),
                  bit_timing=None,
-                 nodes=None,
+                 nodes=tuple(),
                  value_tables=None,
                  messages=None,
                  message_transmitters=None,
@@ -234,7 +234,7 @@ class MultiplexedSignals(AStNodeList):
 
 class Nodes(AStNodeList):
     def __init__(self, nodes):
-        self.nodes = nodes
+        super(Nodes, self).__init__(nodes)
 
 
 class Signal(AstNode):
