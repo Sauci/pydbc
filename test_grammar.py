@@ -1,7 +1,10 @@
 import pytest
+import pytest_cases
 
 from .pydbc import *
 
+doubles = [0.0, -1.0, 1.0]
+char_strings = ['"s"', '"_"']
 empty_string = ''
 random_strings = ['a', '0']
 c_identifiers = ['_', '_c']
@@ -31,6 +34,27 @@ new_symbols_strings = ['CM_',
                        'BU_SG_REL_',
                        'BU_EV_REL_',
                        'BU_BO_REL_']
+
+
+@pytest_cases.fixture_plus()
+@pytest.mark.parametrize('double', doubles)
+@pytest.mark.parametrize('char_string', char_strings)
+def value_table_description(double, char_string):
+    return '{} {}'.format(double, char_string), ValueTableDescription(double, char_string)
+
+
+@pytest_cases.fixture_plus()
+@pytest.mark.parametrize('value_table_name', c_identifiers)
+@pytest.mark.parametrize('value_descriptions_count', [1, 2])
+@pytest_cases.parametrize_plus('value_description_0', [pytest_cases.fixture_ref('value_table_description')])
+@pytest_cases.parametrize_plus('value_description_1', [pytest_cases.fixture_ref('value_table_description')])
+def value_tables(value_table_name, value_descriptions_count, value_description_0, value_description_1):
+    value_description_0_string, value_description_0_value = value_description_0
+    value_description_1_string, value_description_1_value = value_description_1
+    value_descriptions_string = [value_description_0_string, value_description_1_string][:value_descriptions_count]
+    value_descriptions_value = [value_description_0_value, value_description_1_value][:value_descriptions_count]
+    return ('VAL_TABLE_ {} {} ;'.format(value_table_name, ' '.join(value_descriptions_string)),
+            ValTable(value_table_name, value_descriptions_value))
 
 
 @pytest.mark.parametrize('prop, value', (
@@ -92,3 +116,11 @@ def test_nodes_node(node_name_string_0, node_name_string_1):
     p = DbcParser('BU_ : {} {}'.format(node_name_string_0, node_name_string_1))
     assert isinstance(p.ast.nodes, list)
     assert p.ast.nodes == ([node_name_string_0] if node_name_string_0 else []) + [node_name_string_1]
+
+
+@pytest_cases.parametrize_plus('value_table', [pytest_cases.fixture_ref('value_tables')])
+def test_value_tables_node(value_table):
+    value_table_string, value_table_value = value_table
+    p = DbcParser(value_table_string)
+    assert isinstance(p.ast.value_tables, list)
+    assert p.ast.value_tables[0] == value_table_value

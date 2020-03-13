@@ -257,7 +257,7 @@ class Signal(AstNode):
 class ValTable(AstNode):
     def __init__(self, name, value_descriptions):
         self.name = name
-        self.value_description = value_descriptions
+        self.value_descriptions = value_descriptions
 
 
 class ValueDescription(AstNode):
