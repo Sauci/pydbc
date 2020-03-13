@@ -157,7 +157,7 @@ class DbcFile(AstNode):
                  new_symbols=tuple(),
                  bit_timing=None,
                  nodes=tuple(),
-                 value_tables=None,
+                 value_tables=tuple(),
                  messages=None,
                  message_transmitters=None,
                  environment_variables=None,
@@ -286,7 +286,7 @@ class ValueDescriptions(AStNodeList):
 
 class ValueTables(AStNodeList):
     def __init__(self, value_tables):
-        self.value_tables = value_tables
+        super(ValueTables, self).__init__(value_tables)
 
 
 class ValueTableDescription(AstNode):
