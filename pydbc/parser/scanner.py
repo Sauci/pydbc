@@ -436,8 +436,17 @@ class DbcParser(object):
 
     @staticmethod
     def p_signal(p):
-        """signal : SG_ IDENT multiplexer_indicator COLON NUMERIC VERTICAL_BAR NUMERIC AROBASE NUMERIC value_type PARENTHESE_OPEN NUMERIC COMMA NUMERIC PARENTHESE_CLOSE BRACE_OPEN NUMERIC VERTICAL_BAR NUMERIC BRACE_CLOSE STRING nodes_list"""
+        """signal : SG_ IDENT multiplexer_indicator COLON NUMERIC VERTICAL_BAR NUMERIC AROBASE NUMERIC value_type PARENTHESE_OPEN NUMERIC COMMA NUMERIC PARENTHESE_CLOSE BRACE_OPEN NUMERIC VERTICAL_BAR NUMERIC BRACE_CLOSE STRING receiver_list"""
         p[0] = Signal(p[2], p[3], p[5], p[7], p[9], p[10], p[12], p[14], p[17], p[19], p[21], p[22])
+
+    @staticmethod
+    def p_receiver_list(p):
+        """receiver_list : IDENT
+                         | IDENT COMMA receiver_list"""
+        try:
+            p[0] = [p[1]] + p[3]
+        except IndexError:
+            p[0] = [p[1]]
 
     @staticmethod
     def p_signal_list(p):
