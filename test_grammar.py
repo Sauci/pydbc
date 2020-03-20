@@ -3,11 +3,11 @@ import pytest_cases
 
 from .pydbc import *
 
-doubles = [0.0, -1.0, 1.0]
-char_strings = ['"s"', '"_"']
+doubles = [0.0]
+char_strings = ['"s"']
 empty_string = ''
-random_strings = ['a', '0']
-c_identifiers = ['_', '_c']
+random_strings = ['a']
+c_identifiers = ['_']
 new_symbols_strings = ['CM_',
                        'BA_DEF_',
                        'BA_',
@@ -34,7 +34,7 @@ new_symbols_strings = ['CM_',
                        'BU_SG_REL_',
                        'BU_EV_REL_',
                        'BU_BO_REL_']
-unsigned_integers = [0, 1, 2]
+unsigned_integers = [0]
 multiplexer_indicators = [' ', 'M', 'm0']
 
 
@@ -79,6 +79,16 @@ def receivers(receivers_count, receiver_0, receiver_1):
     receivers_string = ', '.join([receiver_0, receiver_1][:receivers_count])
     receivers_value = [receiver_0, receiver_1][:receivers_count]
     return receivers_string, receivers_value
+
+
+@pytest_cases.fixture_plus()
+@pytest.mark.parametrize('transmitters_count', [1, 2])
+@pytest.mark.parametrize('transmitter_0', c_identifiers + ['Vector_XXX'])
+@pytest.mark.parametrize('transmitter_1', c_identifiers + ['Vector_XXX'])
+def transmitters(transmitters_count, transmitter_0, transmitter_1):
+    transmitters_string = '\n'.join([transmitter_0, transmitter_1][:transmitters_count])
+    transmitters_value = [transmitter_0, transmitter_1][:transmitters_count]
+    return transmitters_string, transmitters_value
 
 
 @pytest_cases.fixture_plus()
@@ -169,6 +179,28 @@ def messages(messages_count, message_0, message_1):
     return messages_string, messages_value
 
 
+@pytest_cases.fixture_plus()
+@pytest.mark.parametrize('message_id', unsigned_integers)
+@pytest_cases.parametrize_plus('ts', [pytest_cases.fixture_ref('transmitters')])
+def message_transmitter(message_id, ts):
+    transmitters_string, transmitters_value = ts
+    return ('BO_TX_BU_ {} : {} ;'.format(message_id, transmitters_string),
+            MessageTransmitter(message_id, transmitters_value))
+
+
+@pytest_cases.fixture_plus()
+@pytest.mark.parametrize('message_transmitters_count', [1, 2])
+@pytest_cases.parametrize_plus('message_transmitter_0', [pytest_cases.fixture_ref('message_transmitter')])
+@pytest_cases.parametrize_plus('message_transmitter_1', [pytest_cases.fixture_ref('message_transmitter')])
+def message_transmitters(message_transmitters_count, message_transmitter_0, message_transmitter_1):
+    message_transmitter_0_string, message_transmitter_0_value = message_transmitter_0
+    message_transmitter_1_string, message_transmitter_1_value = message_transmitter_1
+    messages_string = '\n'.join([message_transmitter_0_string,
+                                 message_transmitter_1_string][:message_transmitters_count])
+    messages_value = [message_transmitter_0_value, message_transmitter_1_value][:message_transmitters_count]
+    return messages_string, messages_value
+
+
 @pytest.mark.parametrize('prop, value', (
         ('version', None),
         ('new_symbols', tuple()),
@@ -176,7 +208,7 @@ def messages(messages_count, message_0, message_1):
         ('nodes', tuple()),
         ('value_tables', tuple()),
         ('messages', tuple()),
-        ('message_transmitters', None),
+        ('message_transmitters', tuple()),
         ('environment_variables', None),
         ('environment_variables_data', None),
         ('signal_types', None),
@@ -240,9 +272,18 @@ def test_value_tables_node(vts):
 
 
 @pytest_cases.parametrize_plus('ms', [pytest_cases.fixture_ref('messages')])
-def test_signal_node(ms):
+def test_messages_node(ms):
     messages_string, messages_value = ms
     p = DbcParser(messages_string)
     assert isinstance(p.ast.messages, list)
     for index, m in enumerate(messages_value):
         assert p.ast.messages[index] == m
+
+
+@pytest_cases.parametrize_plus('mts', [pytest_cases.fixture_ref('message_transmitters')])
+def test_message_transmitters_node(mts):
+    message_transmitters_string, message_transmitters_value = mts
+    p = DbcParser(message_transmitters_string)
+    assert isinstance(p.ast.message_transmitters, list)
+    for index, mt in enumerate(message_transmitters_value):
+        assert p.ast.message_transmitters[index] == mt
