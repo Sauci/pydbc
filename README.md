@@ -1,4 +1,9 @@
-# Package description
+# pydbc
+
+## Status
+![Test Python package](https://github.com/Sauci/pydbc/workflows/Test%20Python%20package/badge.svg)
+
+## Package description
 The purpose of this package is to generate an AST based on the content of DBC-formatted string. Bellow a short example:
 ```python
 from pydbc.parser import DbcParser
