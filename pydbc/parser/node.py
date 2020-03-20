@@ -159,7 +159,7 @@ class DbcFile(AstNode):
                  nodes=tuple(),
                  value_tables=tuple(),
                  messages=tuple(),
-                 message_transmitters=None,
+                 message_transmitters=tuple(),
                  environment_variables=None,
                  environment_variables_data=None,
                  signal_types=None,
@@ -218,6 +218,17 @@ class Messages(AStNodeList):
             if e.name == name:
                 return e
         raise KeyError
+
+
+class MessageTransmitter(AstNode):
+    def __init__(self, identifier, transmitters):
+        self.identifier = identifier
+        self.transmitters = transmitters
+
+
+class MessageTransmitters(AStNodeList):
+    def __init__(self, message_transmitters):
+        super(MessageTransmitters, self).__init__(message_transmitters)
 
 
 class MultiplexedSignal(AstNode):

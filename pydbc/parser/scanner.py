@@ -52,6 +52,7 @@ class DbcParser(object):
                          | nodes
                          | value_tables
                          | messages
+                         | message_transmitters
                          | comments
                          | attribute_definitions
                          | attribute_defaults
@@ -59,6 +60,41 @@ class DbcParser(object):
                          | value_descriptions
                          | multiplexed_signals"""
         p[0] = p.slice[1].type, p[1]
+
+    @staticmethod
+    def p_message_transmitters(p):
+        """message_transmitters : empty
+                                | message_transmitters_list"""
+        p[0] = p[1]
+
+    @staticmethod
+    def p_message_transmitters_list(p):
+        """message_transmitters_list : message_transmitter
+                                     | message_transmitter message_transmitters_list"""
+        try:
+            p[0] = [p[1]] + p[2]
+        except IndexError:
+            p[0] = [p[1]]
+
+    @staticmethod
+    def p_message_transmitter(p):
+        """message_transmitter : BO_TX_BU_ NUMERIC COLON transmitter_list_optional SEMICOLON"""
+        p[0] = MessageTransmitter(p[2], p[4])
+
+    @staticmethod
+    def p_transmitter_list(p):
+        """transmitter_list : IDENT
+                            | IDENT transmitter_list"""
+        try:
+            p[0] = [p[1]] + p[2]
+        except IndexError:
+            p[0] = [p[1]]
+
+    @staticmethod
+    def p_transmitter_list_optional(p):
+        """transmitter_list_optional : empty
+                                     | transmitter_list"""
+        p[0] = p[1]
 
     @staticmethod
     def p_multiplexed_signals(p):
