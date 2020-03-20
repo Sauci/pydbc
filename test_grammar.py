@@ -175,7 +175,7 @@ def messages(messages_count, message_0, message_1):
         ('bit_timing', None),
         ('nodes', tuple()),
         ('value_tables', tuple()),
-        ('messages', None),
+        ('messages', tuple()),
         ('message_transmitters', None),
         ('environment_variables', None),
         ('environment_variables_data', None),

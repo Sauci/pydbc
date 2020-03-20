@@ -158,7 +158,7 @@ class DbcFile(AstNode):
                  bit_timing=None,
                  nodes=tuple(),
                  value_tables=tuple(),
-                 messages=None,
+                 messages=tuple(),
                  message_transmitters=None,
                  environment_variables=None,
                  environment_variables_data=None,
