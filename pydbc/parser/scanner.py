@@ -82,7 +82,7 @@ class DbcParser(object):
 
     @staticmethod
     def p_environment_variable(p):
-        """environment_variable : EV_ IDENT COLON env_var_type BRACE_OPEN NUMERIC VERTICAL_BAR NUMERIC BRACE_CLOSE STRING NUMERIC NUMERIC access_type access_node_list"""
+        """environment_variable : EV_ IDENT COLON env_var_type BRACE_OPEN NUMERIC VERTICAL_BAR NUMERIC BRACE_CLOSE STRING NUMERIC NUMERIC access_type access_node_list SEMICOLON"""
         p[0] = EnvironmentVariable(p[2], p[4], p[6], p[8], p[10], p[11], p[12], p[13], p[14])
 
     @staticmethod
