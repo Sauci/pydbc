@@ -165,7 +165,7 @@ class DbcParser(object):
 
     @staticmethod
     def p_multiplexed_signal(p):
-        """multiplexed_signal : SG_MUL_VAL_ message_id multiplexed_signal_name multiplexor_switch_name multiplexor_value_ranges SEMICOLON"""
+        """multiplexed_signal : SG_MUL_VAL_ message_id multiplexed_signal_name multiplexer_switch_name multiplexer_value_ranges SEMICOLON """
         p[0] = MultiplexedSignal(p[2], p[3], p[4], p[5])
 
     @staticmethod
@@ -174,14 +174,14 @@ class DbcParser(object):
         p[0] = p[1]
 
     @staticmethod
-    def p_multiplexor_switch_name(p):
-        """multiplexor_switch_name : IDENT"""
+    def p_multiplexer_switch_name(p):
+        """multiplexer_switch_name : IDENT"""
         p[0] = p[1]
 
     @staticmethod
-    def p_multiplexor_value_ranges(p):
-        """multiplexor_value_ranges : value_range
-                                    | value_range COMMA multiplexor_value_ranges"""
+    def p_multiplexer_value_ranges(p):
+        """multiplexer_value_ranges : value_range
+                                    | value_range COMMA multiplexer_value_ranges"""
         try:
             p[0] = [p[1]] + p[3]
         except IndexError:
@@ -665,7 +665,7 @@ class DbcParser(object):
         p[0] = p[1]
 
     @staticmethod
-    def p_bit_timimg(p):
+    def p_bit_timing(p):
         """bit_timing : BS_ COLON bit_timing_optional"""
         p[0] = p[3]
 
