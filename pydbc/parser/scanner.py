@@ -53,6 +53,7 @@ class DbcParser(object):
                          | value_tables
                          | messages
                          | message_transmitters
+                         | environment_variables
                          | comments
                          | attribute_definitions
                          | attribute_defaults
@@ -60,6 +61,48 @@ class DbcParser(object):
                          | value_descriptions
                          | multiplexed_signals"""
         p[0] = p.slice[1].type, p[1]
+
+    @staticmethod
+    def p_environment_variables(p):
+        """environment_variables : empty
+                                | environment_variable_list"""
+        p[0] = p[1]
+
+    @staticmethod
+    def p_environment_variable_list(p):
+        """environment_variable_list : environment_variable
+                                      | environment_variable environment_variable_list"""
+        try:
+            p[0] = [p[1]] + p[2]
+        except IndexError:
+            p[0] = [p[1]]
+
+    @staticmethod
+    def p_environment_variable(p):
+        """environment_variable : EV_ IDENT COLON env_var_type BRACE_OPEN NUMERIC VERTICAL_BAR NUMERIC BRACE_CLOSE STRING NUMERIC NUMERIC access_type access_node_list"""
+        p[0] = EnvironmentVariable(p[2], p[4], p[6], p[8], p[10], p[11], p[12], p[13], p[14])
+
+    @staticmethod
+    def p_env_var_type(p):
+        """env_var_type : NUMERIC"""
+        p[0] = p[1]
+
+    @staticmethod
+    def p_access_type(p):
+        """access_type : DUMMY_NODE_VECTOR0
+                       | DUMMY_NODE_VECTOR1
+                       | DUMMY_NODE_VECTOR2
+                       | DUMMY_NODE_VECTOR3"""
+        p[0] = p[1]
+
+    @staticmethod
+    def p_access_node_list(p):
+        """access_node_list : IDENT
+                            | IDENT COMMA access_node_list"""
+        try:
+            p[0] = [p[1]] + p[3]
+        except IndexError:
+            p[0] = [p[1]]
 
     @staticmethod
     def p_message_transmitters(p):

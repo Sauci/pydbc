@@ -160,7 +160,7 @@ class DbcFile(AstNode):
                  value_tables=tuple(),
                  messages=tuple(),
                  message_transmitters=tuple(),
-                 environment_variables=None,
+                 environment_variables=tuple(),
                  environment_variables_data=None,
                  signal_types=None,
                  comments=None,
@@ -199,6 +199,19 @@ class DbcFile(AstNode):
         self.signal_groups = signal_groups
         self.signal_extended_value_type_list = signal_extended_value_type_list
         self.multiplexed_signals = multiplexed_signals
+
+
+class EnvironmentVariable(AstNode):
+    def __init__(self, name, type, minimum, maximum, unit, initial_value, identifier, access_type, access_nodes):
+        self.name = name
+        self.type = type
+        self.minimum = minimum
+        self.maximum = maximum
+        self.unit = unit
+        self.initial_value = initial_value
+        self.identifier = identifier
+        self.access_type = access_type
+        self.access_nodes = access_nodes
 
 
 class Message(AstNode):

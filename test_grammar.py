@@ -36,6 +36,10 @@ new_symbols_strings = ['CM_',
                        'BU_BO_REL_']
 unsigned_integers = [0]
 multiplexer_indicators = [' ', 'M', 'm0']
+access_types = ['DUMMY_NODE_VECTOR0',
+                'DUMMY_NODE_VECTOR1',
+                'DUMMY_NODE_VECTOR2',
+                'DUMMY_NODE_VECTOR3']
 
 
 @pytest_cases.fixture_plus()
@@ -89,6 +93,16 @@ def transmitters(transmitters_count, transmitter_0, transmitter_1):
     transmitters_string = '\n'.join([transmitter_0, transmitter_1][:transmitters_count])
     transmitters_value = [transmitter_0, transmitter_1][:transmitters_count]
     return transmitters_string, transmitters_value
+
+
+@pytest_cases.fixture_plus()
+@pytest.mark.parametrize('access_nodes_count', [1, 2])
+@pytest.mark.parametrize('access_node_0', c_identifiers + ['Vector_XXX'])
+@pytest.mark.parametrize('access_node_1', c_identifiers + ['Vector_XXX'])
+def access_nodes(access_nodes_count, access_node_0, access_node_1):
+    access_nodes_string = ', '.join([access_node_0, access_node_1][:access_nodes_count])
+    access_nodes_value = [access_node_0, access_node_1][:access_nodes_count]
+    return access_nodes_string, access_nodes_value
 
 
 @pytest_cases.fixture_plus()
@@ -195,10 +209,64 @@ def message_transmitter(message_id, ts):
 def message_transmitters(message_transmitters_count, message_transmitter_0, message_transmitter_1):
     message_transmitter_0_string, message_transmitter_0_value = message_transmitter_0
     message_transmitter_1_string, message_transmitter_1_value = message_transmitter_1
-    messages_string = '\n'.join([message_transmitter_0_string,
-                                 message_transmitter_1_string][:message_transmitters_count])
-    messages_value = [message_transmitter_0_value, message_transmitter_1_value][:message_transmitters_count]
-    return messages_string, messages_value
+    message_transmitters_string = '\n'.join([message_transmitter_0_string,
+                                             message_transmitter_1_string][:message_transmitters_count])
+    message_transmitters_value = [message_transmitter_0_value, message_transmitter_1_value][:message_transmitters_count]
+    return message_transmitters_string, message_transmitters_value
+
+
+@pytest_cases.fixture_plus()
+@pytest.mark.parametrize('env_var_name', c_identifiers)
+@pytest.mark.parametrize('env_var_type', unsigned_integers)  # TODO: allowed values are 0, 1 and 2, add a check?...
+@pytest.mark.parametrize('minimum', doubles)
+@pytest.mark.parametrize('maximum', doubles)
+@pytest.mark.parametrize('unit', char_strings)
+@pytest.mark.parametrize('initial_value', doubles)
+@pytest.mark.parametrize('ev_id', unsigned_integers)
+@pytest.mark.parametrize('access_type', access_types)
+@pytest_cases.parametrize_plus('access_node', [pytest_cases.fixture_ref('access_nodes')])
+def environment_variable(env_var_name,
+                         env_var_type,
+                         minimum,
+                         maximum,
+                         unit,
+                         initial_value,
+                         ev_id,
+                         access_type,
+                         access_node):
+    access_nodes_string, access_nodes_value = access_node
+    return ('EV_ {} : {} [ {} | {} ] {} {} {} {} {}'.format(env_var_name,
+                                                            env_var_type,
+                                                            minimum,
+                                                            maximum,
+                                                            unit,
+                                                            initial_value,
+                                                            ev_id,
+                                                            access_type,
+                                                            access_nodes_string),
+            EnvironmentVariable(env_var_name,
+                                env_var_type,
+                                minimum,
+                                maximum,
+                                unit,
+                                initial_value,
+                                ev_id,
+                                access_type,
+                                access_nodes_value))
+
+
+@pytest_cases.fixture_plus()
+@pytest.mark.parametrize('environment_variables_count', [1, 2])
+@pytest_cases.parametrize_plus('environment_variable_0', [pytest_cases.fixture_ref('environment_variable')])
+@pytest_cases.parametrize_plus('environment_variable_1', [pytest_cases.fixture_ref('environment_variable')])
+def environment_variables(environment_variables_count, environment_variable_0, environment_variable_1):
+    environment_variable_0_string, environment_variable_0_value = environment_variable_0
+    environment_variable_1_string, environment_variable_1_value = environment_variable_1
+    environment_variable_string = '\n'.join([environment_variable_0_string,
+                                             environment_variable_1_string][:environment_variables_count])
+    environment_variable_value = [environment_variable_0_value,
+                                  environment_variable_1_value][:environment_variables_count]
+    return environment_variable_string, environment_variable_value
 
 
 @pytest.mark.parametrize('prop, value', (
@@ -209,7 +277,7 @@ def message_transmitters(message_transmitters_count, message_transmitter_0, mess
         ('value_tables', tuple()),
         ('messages', tuple()),
         ('message_transmitters', tuple()),
-        ('environment_variables', None),
+        ('environment_variables', tuple()),
         ('environment_variables_data', None),
         ('signal_types', None),
         ('comments', None),
@@ -287,3 +355,12 @@ def test_message_transmitters_node(mts):
     assert isinstance(p.ast.message_transmitters, list)
     for index, mt in enumerate(message_transmitters_value):
         assert p.ast.message_transmitters[index] == mt
+
+
+@pytest_cases.parametrize_plus('evs', [pytest_cases.fixture_ref('environment_variables')])
+def test_environment_variables_node(evs):
+    environment_variables_string, environment_variables_value = evs
+    p = DbcParser(environment_variables_string)
+    assert isinstance(p.ast.environment_variables, list)
+    for index, ev in enumerate(environment_variables_value):
+        assert p.ast.environment_variables[index] == ev

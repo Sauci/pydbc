@@ -57,7 +57,11 @@ keywords = {r'VERSION',
             r'INT',
             r'HEX',
             r'FLOAT',
-            r'ENUM'}
+            r'ENUM',
+            r'DUMMY_NODE_VECTOR0',
+            r'DUMMY_NODE_VECTOR1',
+            r'DUMMY_NODE_VECTOR2',
+            r'DUMMY_NODE_VECTOR3'}
 
 _keywords = dict((k, k) for k in keywords)
 
