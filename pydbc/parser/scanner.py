@@ -64,14 +64,17 @@ class DbcParser(object):
 
     @staticmethod
     def p_environment_variables(p):
-        """environment_variables : empty
-                                | environment_variable_list"""
-        p[0] = p[1]
+        """environment_variables : environment_variable_list"""
+        if p[1] is not None:
+            environment_variables = p[1]
+        else:
+            environment_variables = []
+        p[0] = EnvironmentVariables(environment_variables)
 
     @staticmethod
     def p_environment_variable_list(p):
         """environment_variable_list : environment_variable
-                                      | environment_variable environment_variable_list"""
+                                     | environment_variable environment_variable_list"""
         try:
             p[0] = [p[1]] + p[2]
         except IndexError:
@@ -106,9 +109,12 @@ class DbcParser(object):
 
     @staticmethod
     def p_message_transmitters(p):
-        """message_transmitters : empty
-                                | message_transmitters_list"""
-        p[0] = p[1]
+        """message_transmitters : message_transmitters_list"""
+        if p[1] is not None:
+            message_transmitters = p[1]
+        else:
+            message_transmitters = []
+        p[0] = MessageTransmitters(message_transmitters)
 
     @staticmethod
     def p_message_transmitters_list(p):
@@ -141,8 +147,12 @@ class DbcParser(object):
 
     @staticmethod
     def p_multiplexed_signals(p):
-        """multiplexed_signals : multiplexed_signals_list_optional"""
-        p[0] = MultiplexedSignals(p[1])
+        """multiplexed_signals : multiplexed_signals_list"""
+        if p[1] is not None:
+            multiplexed_signals = p[1]
+        else:
+            multiplexed_signals = []
+        p[0] = MultiplexedSignals(multiplexed_signals)
 
     @staticmethod
     def p_multiplexed_signals_list(p):
@@ -152,12 +162,6 @@ class DbcParser(object):
             p[0] = [p[1]] + p[2]
         except IndexError:
             p[0] = [p[1]]
-
-    @staticmethod
-    def p_multiplexed_signals_list_optional(p):
-        """multiplexed_signals_list_optional : empty
-                                             | multiplexed_signals_list"""
-        p[0] = p[1]
 
     @staticmethod
     def p_multiplexed_signal(p):
@@ -190,8 +194,12 @@ class DbcParser(object):
 
     @staticmethod
     def p_value_descriptions(p):
-        """value_descriptions : value_descriptions_list_optional"""
-        p[0] = ValueDescriptions(p[1])
+        """value_descriptions : value_descriptions_list"""
+        if p[1] is not None:
+            value_descriptions = p[1]
+        else:
+            value_descriptions = []
+        p[0] = ValueDescriptions(value_descriptions)
 
     @staticmethod
     def p_value_descriptions_list(p):
@@ -201,12 +209,6 @@ class DbcParser(object):
             p[0] = [p[1]] + p[2]
         except IndexError:
             p[0] = [p[1]]
-
-    @staticmethod
-    def p_value_descriptions_list_optional(p):
-        """value_descriptions_list_optional : empty
-                                            | value_descriptions_list"""
-        p[0] = p[1]
 
     @staticmethod
     def p_value_descriptions_for(p):
@@ -240,8 +242,12 @@ class DbcParser(object):
 
     @staticmethod
     def p_attribute_values(p):
-        """attribute_values : attribute_values_list_optional"""
-        p[0] = AttributeValues(p[1])
+        """attribute_values : attribute_values_list"""
+        if p[1] is not None:
+            attribute_values = p[1]
+        else:
+            attribute_values = []
+        p[0] = AttributeValues(attribute_values)
 
     @staticmethod
     def p_attribute_values_list(p):
@@ -251,12 +257,6 @@ class DbcParser(object):
             p[0] = [p[1]] + p[2]
         except IndexError:
             p[0] = [p[1]]
-
-    @staticmethod
-    def p_attribute_value_list_optional(p):
-        """attribute_values_list_optional : empty
-                                          | attribute_values_list"""
-        p[0] = p[1]
 
     @staticmethod
     def p_env_var_aname(p):
@@ -421,8 +421,12 @@ class DbcParser(object):
 
     @staticmethod
     def p_comments(p):
-        """comments : comment_list_optional"""
-        p[0] = Comments(p[1])
+        """comments : comment_list"""
+        if p[1] is not None:
+            comments = p[1]
+        else:
+            comments = []
+        p[0] = Comments(comments)
 
     @staticmethod
     def p_comment(p):
@@ -473,16 +477,13 @@ class DbcParser(object):
             p[0] = [p[1]]
 
     @staticmethod
-    def p_comment_list_optional(p):
-        """comment_list_optional : empty
-                                 | comment_list"""
-        p[0] = p[1]
-
-    @staticmethod
     def p_messages(p):
-        """messages : empty
-                    | message_list"""
-        p[0] = Messages(p[1])
+        """messages : message_list"""
+        if p[1] is not None:
+            messages = p[1]
+        else:
+            messages = []
+        p[0] = Messages(messages)
 
     @staticmethod
     def p_message(p):
@@ -557,8 +558,12 @@ class DbcParser(object):
 
     @staticmethod
     def p_value_tables(p):
-        """value_tables : value_table_list_optional"""
-        p[0] = ValueTables(p[1])
+        """value_tables : value_table_list"""
+        if p[1] is not None:
+            value_tables = p[1]
+        else:
+            value_tables = []
+        p[0] = ValueTables(value_tables)
 
     @staticmethod
     def p_value_table_list(p):
@@ -568,12 +573,6 @@ class DbcParser(object):
             p[0] = [p[1]] + p[2]
         except IndexError:
             p[0] = [p[1]]
-
-    @staticmethod
-    def p_value_table_list_optional(p):
-        """value_table_list_optional : empty
-                                     | value_table_list"""
-        p[0] = p[1]
 
     @staticmethod
     def p_value_table(p):

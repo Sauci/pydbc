@@ -214,6 +214,11 @@ class EnvironmentVariable(AstNode):
         self.access_nodes = access_nodes
 
 
+class EnvironmentVariables(AStNodeList):
+    def __init__(self, environment_variables):
+        super(EnvironmentVariables, self).__init__(environment_variables)
+
+
 class Message(AstNode):
     def __init__(self, identifier, name, size, transmitter, signals):
         if signals is None:

@@ -326,7 +326,7 @@ def test_bit_timing_node(bit_timing_string, bit_timing_value):
 @pytest.mark.parametrize('node_name_string_1', c_identifiers)
 def test_nodes_node(node_name_string_0, node_name_string_1):
     p = DbcParser('BU_ : {} {}'.format(node_name_string_0, node_name_string_1))
-    assert isinstance(p.ast.nodes, list)
+    assert isinstance(p.ast.nodes, Nodes)
     assert p.ast.nodes == ([node_name_string_0] if node_name_string_0 else []) + [node_name_string_1]
 
 
@@ -334,7 +334,7 @@ def test_nodes_node(node_name_string_0, node_name_string_1):
 def test_value_tables_node(vts):
     value_table_string, value_table_value = vts
     p = DbcParser(value_table_string)
-    assert isinstance(p.ast.value_tables, list)
+    assert isinstance(p.ast.value_tables, ValueTables)
     for index, val_table in enumerate(value_table_value):
         assert p.ast.value_tables[index] == val_table
 
@@ -343,7 +343,7 @@ def test_value_tables_node(vts):
 def test_messages_node(ms):
     messages_string, messages_value = ms
     p = DbcParser(messages_string)
-    assert isinstance(p.ast.messages, list)
+    assert isinstance(p.ast.messages, Messages)
     for index, m in enumerate(messages_value):
         assert p.ast.messages[index] == m
 
@@ -352,7 +352,7 @@ def test_messages_node(ms):
 def test_message_transmitters_node(mts):
     message_transmitters_string, message_transmitters_value = mts
     p = DbcParser(message_transmitters_string)
-    assert isinstance(p.ast.message_transmitters, list)
+    assert isinstance(p.ast.message_transmitters, MessageTransmitters)
     for index, mt in enumerate(message_transmitters_value):
         assert p.ast.message_transmitters[index] == mt
 
@@ -361,6 +361,6 @@ def test_message_transmitters_node(mts):
 def test_environment_variables_node(evs):
     environment_variables_string, environment_variables_value = evs
     p = DbcParser(environment_variables_string)
-    assert isinstance(p.ast.environment_variables, list)
+    assert isinstance(p.ast.environment_variables, EnvironmentVariables)
     for index, ev in enumerate(environment_variables_value):
         assert p.ast.environment_variables[index] == ev
