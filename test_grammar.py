@@ -269,6 +269,30 @@ def environment_variables(environment_variables_count, environment_variable_0, e
     return environment_variable_string, environment_variable_value
 
 
+@pytest_cases.fixture_plus()
+@pytest.mark.parametrize('env_var_name', c_identifiers)
+@pytest.mark.parametrize('data_size', unsigned_integers)
+def environment_variable_data(env_var_name, data_size):
+    return 'ENVVAR_DATA_ {} : {} ;'.format(env_var_name, data_size), EnvironmentVariableData(env_var_name, data_size)
+
+
+@pytest_cases.fixture_plus()
+@pytest.mark.parametrize('environment_variable_datas_count', [1, 2])
+@pytest_cases.parametrize_plus('environment_variable_data_0', [pytest_cases.fixture_ref('environment_variable_data')])
+@pytest_cases.parametrize_plus('environment_variable_data_1', [pytest_cases.fixture_ref('environment_variable_data')])
+def environment_variable_datas(environment_variable_datas_count,
+                               environment_variable_data_0,
+                               environment_variable_data_1):
+    environment_variable_data_0_string, environment_variable_data_0_value = environment_variable_data_0
+    environment_variable_data_1_string, environment_variable_data_1_value = environment_variable_data_1
+    environment_variable_data_string = '\n'.join([environment_variable_data_0_string,
+                                                  environment_variable_data_1_string][
+                                                 :environment_variable_datas_count])
+    environment_variable_data_value = [environment_variable_data_0_value,
+                                       environment_variable_data_1_value][:environment_variable_datas_count]
+    return environment_variable_data_string, environment_variable_data_value
+
+
 @pytest.mark.parametrize('prop, value', (
         ('version', None),
         ('new_symbols', tuple()),
@@ -364,3 +388,12 @@ def test_environment_variables_node(evs):
     assert isinstance(p.ast.environment_variables, EnvironmentVariables)
     for index, ev in enumerate(environment_variables_value):
         assert p.ast.environment_variables[index] == ev
+
+
+@pytest_cases.parametrize_plus('evds', [pytest_cases.fixture_ref('environment_variable_datas')])
+def test_environment_variable_datas_node(evds):
+    environment_variables_datas_string, environment_variables_datas_value = evds
+    p = DbcParser(environment_variables_datas_string)
+    assert isinstance(p.ast.environment_variables_data, EnvironmentVariableDatas)
+    for index, evd in enumerate(environment_variables_datas_value):
+        assert p.ast.environment_variables_data[index] == evd

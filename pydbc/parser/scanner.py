@@ -54,6 +54,7 @@ class DbcParser(object):
                          | messages
                          | message_transmitters
                          | environment_variables
+                         | environment_variables_data
                          | comments
                          | attribute_definitions
                          | attribute_defaults
@@ -61,6 +62,29 @@ class DbcParser(object):
                          | value_descriptions
                          | multiplexed_signals"""
         p[0] = p.slice[1].type, p[1]
+
+    @staticmethod
+    def p_environment_variables_data(p):
+        """environment_variables_data : environment_variable_data_list"""
+        if p[1] is not None:
+            environment_variables_data = p[1]
+        else:
+            environment_variables_data = []
+        p[0] = EnvironmentVariableDatas(environment_variables_data)
+
+    @staticmethod
+    def p_environment_variable_data_list(p):
+        """environment_variable_data_list : environment_variable_data
+                                          | environment_variable_data environment_variable_data_list"""
+        try:
+            p[0] = [p[1]] + p[2]
+        except IndexError:
+            p[0] = [p[1]]
+
+    @staticmethod
+    def p_environment_variable_data(p):
+        """environment_variable_data : ENVVAR_DATA_ IDENT COLON NUMERIC SEMICOLON"""
+        p[0] = EnvironmentVariableData(p[2], p[4])
 
     @staticmethod
     def p_environment_variables(p):
