@@ -24,7 +24,7 @@ class AttributeDefault(AstNode):
 
 class AttributeDefaults(AStNodeList):
     def __init__(self, attribute_defaults):
-        self.attribute_defaults = attribute_defaults
+        super(AttributeDefaults, self).__init__(attribute_defaults)
 
 
 class AttributeDefinition(AstNode):
@@ -36,7 +36,7 @@ class AttributeDefinition(AstNode):
 
 class AttributeDefinitions(AStNodeList):
     def __init__(self, attribute_definitions):
-        self.attribute_definitions = attribute_definitions
+        super(AttributeDefinitions, self).__init__(attribute_definitions)
 
 
 class AttributeValue(AstNode):
@@ -46,7 +46,7 @@ class AttributeValue(AstNode):
 
 class AttributeValues(AStNodeList):
     def __init__(self, attribute_values):
-        self.attribute_values = attribute_values
+        super(AttributeValues, self).__init__(attribute_values)
 
 
 class AttributeValueEnvironmentVariable(AstNode):
@@ -115,7 +115,7 @@ class Comment(AstNode):
 
 class Comments(AStNodeList):
     def __init__(self, comments):
-        self.comments = comments
+        super(Comments, self).__init__(comments)
 
 
 class CommentEnvironmentVariable(AstNode):
@@ -292,7 +292,7 @@ class ValueDescriptionForSignal(AstNode):
 
 class ValueDescriptions(AStNodeList):
     def __init__(self, value_descriptions):
-        self.value_descriptions = value_descriptions
+        super(ValueDescriptions, self).__init__(value_descriptions)
 
 
 class ValueTables(AStNodeList):
